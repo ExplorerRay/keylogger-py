@@ -6,15 +6,18 @@ def recv_file(s, file_name):
         (conn, addr) = s.accept()
         with open(file_name, 'wb') as f:
             while True:
-                print('Receiving data...')
+                #print('Receiving data...')
                 data = conn.recv(32)
+                if data != b'':
+                    print('Receiving data:', data)
+
                 if data == b'BEGIN':
                     continue
-                elif data == b'END':
+                elif data.endswith(b'END'):
                     break
                 else:
                     f.write(data)
-                    print('write to file', data.decode('utf-8'))
+                    #print('write to file', data.decode('utf-8'))
                 f.write(data)
             f.close()
             break
