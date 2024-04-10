@@ -3,6 +3,7 @@ use Python to log keystrokes
 
 ## Usage
 victim run `python klg.py` (you can change the interval by yourself)
+
 server run `python server.py` to get the log file
 
 ## Python
